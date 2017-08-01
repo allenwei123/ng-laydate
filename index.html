@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>my document</title>
+    <script src="angular/angular.min.js"></script>
+    <script src="laydate/js/laydate.js"></script>
+    <link rel="stylesheet" href="laydate/js/need/laydate.css">
+</head>
+<body>
+<div ng-app="app" ng-controller="root" style="width:100%">
+    <input type="text" just-date id='af' ng-model="countTime" bf='back()'>
+    <h1>{{ countTime }}</h1>
+</div>
+</body>
+<script>
+var app = angular.module('app', []);
+app.controller('root',['$scope',function($scope){
+    
+}])
+app.directive('justDate', function() {
+            return {
+            require: '?ngModel',
+            restrict: 'A',
+                scope: {
+                    ngModel: '=',
+                    backFn: '&bf'
+            },
+            link: function(scope, element, attr, ngModel) {
+                var _date = null,_config={};
+                _config = {
+                elem: '#' + attr.id,
+                    format: attr.format != undefined && attr.format != '' ? attr.format : 'YYYY-MM-DD',
+                choose:setViewValue
+                };         
+                ngModel.$render = function() {
+                    element.val(ngModel.$viewValue || '');
+                };
+                element.on('click', function() {
+                    laydate(_config);
+                });
+                function setViewValue() {
+                    var val = element.val();
+                    ngModel.$setViewValue(val);
+                    scope.backFn();
+                }
+            }  
+        }
+    })
+</script>
+</html>
+
+
